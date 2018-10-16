@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-let TOKEN = localStorage.getItem('Uid')
-let UID = localStorage.getItem('HealthToken')
+let TOKEN = localStorage.getItem('HealthToken')
+let UID = localStorage.getItem('Uid')
 
 
 
