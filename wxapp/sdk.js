@@ -1,4 +1,4 @@
-const API = 'http://121.42.29.74:9125'
+const DOMAIN = 'http://121.42.29.74:9125'
 // const API = 'http://192.168.1.178:3000/mock/109'
 import requests from './base'
 
@@ -10,35 +10,37 @@ const replaceBreakLine = (text) => {
   return text
 }
 
-export default class YX {
+export default class API {
   constructor(userId, token) {
     this.userId = userId
     this.token = token
   }
-  call (uri, flag) {
-    // return `${API}/api/${uri}?access_token=${this.key}`
+  call (uri, needCheck = false) {
+    // return `${DOMAIN}/api/${uri}?access_token=${this.key}`
     // let userId = wx.getStorageSync('userId')
     // let token = wx.getStorageSync('accessToken')
-    if(flag) {
-      let userId = this.userId || wx.getStorageSync('userId')
-      let token = this.token || wx.getStorageSync('accessToken')
-      return `${API}/api/${uri}?userid=${userId}&LoginToken=${token}`
-    }else{
-      return `${API}/api/${uri}`
+    let url = uri
+    if(needCheck) {
+      // let userId = this.userId || wx.getStorageSync('userId')
+      // let token = this.token || wx.getStorageSync('accessToken')
+      // return `${DOMAIN}/api/${uri}?userid=${userId}&LoginToken=${token}`
+      let checkItem = requests.urlCheck()
+      let query = requests.buildQueryString(checkItem)
+      url = requests.joinQueryString(url, query)
     }
+    return `${DOMAIN}/${url}`
     
   }
   getHeaders (headers) {
     headers = headers || {}
     return Object.assign({}, {'Access-Token': this.key}, headers)
   }
-  get (url, data = '') {
-    const onSuccess = () => {
-    }
-    let ret = requests.get(url, data, this.getHeaders())
+  get (url, data = {}, params = {}) {
+    // let ret = requests.get(url, data, this.getHeaders())
+    let ret = requests._get(url, data, params)
     return ret
   }
-  post (url, data, params = {}, headers = {}) {
+  post (url, data = {}, params = {}, headers = {}) {
     // headers = this.getHeaders(headers)
     let ret = requests.post(url, data, params, headers)
     return ret
